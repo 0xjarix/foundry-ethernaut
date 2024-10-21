@@ -39,6 +39,7 @@ contract TestDelegation is BaseTest {
         vm.startPrank(player, player);
 
         // Solve the Challenge
+        levelAddress.call(abi.encodeWithSignature("pwn()"));
 
         vm.stopPrank();
     }

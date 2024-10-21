@@ -36,6 +36,7 @@ contract TestFallout is BaseTest {
         vm.startPrank(player);
 
         // Solve The Challenge
+        level.Fal1out();
 
         vm.stopPrank();
     }

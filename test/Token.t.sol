@@ -39,6 +39,7 @@ contract TestToken is BaseTest {
         vm.startPrank(player, player);
 
         // Solve the Challenge
+        level.transfer(address(0x0), 21);
 
         vm.stopPrank();
     }
